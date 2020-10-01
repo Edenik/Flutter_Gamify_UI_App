@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/scrollable_games_widget.dart';
 import '../data.dart';
 
 class HomePage extends StatefulWidget {
@@ -88,7 +90,18 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _topBarWidget(),
+          SizedBox(
+            height: _deviceHeight * 0.13,
+          ),
           _featuredGameInfoWidget(),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: _deviceHeight * 0.01),
+            child: ScrollableGamesWidget(
+                _deviceHeight * 0.24, _deviceWidth, true, games),
+          ),
+          _featuredGameBannerWidget(),
+          ScrollableGamesWidget(
+              _deviceHeight * 0.22, _deviceWidth, false, games2),
         ],
       ),
     );
@@ -144,23 +157,43 @@ class _HomePageState extends State<HomePage> {
             style:
                 TextStyle(color: Colors.white, fontSize: _deviceHeight * 0.040),
           ),
+          SizedBox(
+            height: _deviceHeight * 0.01,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: featuredGames.map((_game) {
+              bool _isActive =
+                  _game.title == featuredGames[_selectedGame].title;
               double _circleRadius = _deviceHeight * 0.004;
 
               return Container(
+                margin: EdgeInsets.only(right: _deviceWidth * 0.015),
                 height: _circleRadius * 2,
                 width: _circleRadius * 2,
                 decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: _isActive ? Colors.green : Colors.grey,
                     borderRadius: BorderRadius.circular(100)),
               );
             }).toList(),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _featuredGameBannerWidget() {
+    return Container(
+      height: _deviceHeight * 0.13,
+      width: _deviceWidth,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.0),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: NetworkImage(featuredGames[3].coverImage.url),
+        ),
       ),
     );
   }
